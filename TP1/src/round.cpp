@@ -1,5 +1,6 @@
 #include <utility>
 #include "../include/round.h"
+#include "../include/helper.h"
 
 Round::Round() {
     _numPlays = 0;
@@ -47,16 +48,17 @@ void Round::generateResult(VectorCustom<Player> players) {
             tieWinners.push(play);
         }
     }
+    VectorCustom<Play> winners = Helper::getWinnersBreakTie(tieWinners);
     VectorCustom<std::string> winnersNames;
-    for (int i = 0; i < tieWinners.length(); ++i) {
-        Play play = tieWinners.get(i);
+    for (int i = 0; i < winners.length(); ++i) {
+        Play play = winners.get(i);
         winnersNames.push(play.getPlayerName());
     }
     int totalAmount = (_initBet * players.length());
     for (int i = 0; i < _plays.length(); ++i) {
         totalAmount += _plays.get(i).getBet();
     }
-    totalAmount /= tieWinners.length();
+    totalAmount /= winners.length();
     for (int i = 0; i < players.length(); ++i) {
         if (winnersNames.contains(players.get(i).getPlayerName())) {
             Player winner = players.get(i);
@@ -65,7 +67,7 @@ void Round::generateResult(VectorCustom<Player> players) {
             players.push(winner, i);
         }
     }
-    Result result = Result(tieWinners.length(), totalAmount, lastWinner.getClassification(), winnersNames);
+    Result result = Result(winners.length(), totalAmount, lastWinner.getClassification(), winnersNames);
     setResult(result);
 }
 

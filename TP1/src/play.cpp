@@ -55,25 +55,25 @@ void Play::generatePlayClassification() {
 
 void Play::generatePlayValue() {
     if (_classification == "RSF") {
-        setValue(100);
-    } else if (_classification == "SF") {
-        setValue(90);
-    } else if (_classification == "FK") {
-        setValue(80);
-    } else if (_classification == "FH") {
-        setValue(70);
-    } else if (_classification == "F") {
-        setValue(60);
-    } else if (_classification == "S") {
-        setValue(50);
-    } else if (_classification == "TK") {
-        setValue(40);
-    } else if (_classification == "TP") {
-        setValue(30);
-    } else if (_classification == "OP") {
-        setValue(20);
-    } else {
         setValue(10);
+    } else if (_classification == "SF") {
+        setValue(9);
+    } else if (_classification == "FK") {
+        setValue(8);
+    } else if (_classification == "FH") {
+        setValue(7);
+    } else if (_classification == "F") {
+        setValue(6);
+    } else if (_classification == "S") {
+        setValue(5);
+    } else if (_classification == "TK") {
+        setValue(4);
+    } else if (_classification == "TP") {
+        setValue(3);
+    } else if (_classification == "OP") {
+        setValue(2);
+    } else {
+        setValue(1);
     }
 }
 

@@ -16,6 +16,13 @@ public:
         max = 1;
     };
 
+    explicit VectorCustom(T data) {
+        arr = new T[1];
+        arr[0] = data;
+        size = 1;
+        max = 1;
+    };
+
     void push(T data) {
         if (size == max) {
             T *temp = new T[2 * max];
@@ -44,6 +51,13 @@ public:
     };
 
     void pop() {
+        size--;
+    };
+
+    void pop(int index) {
+        for (int i = index; i < size - 1; ++i) {
+            arr[i] = arr[i + 1];
+        }
         size--;
     };
 

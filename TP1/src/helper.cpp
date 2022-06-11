@@ -129,3 +129,59 @@ bool Helper::isOnePair(VectorCustom<std::string> hand) {
     }
     return false;
 }
+
+VectorCustom<int> Helper::fourOfAKindBreakTie(VectorCustom<VectorCustom<std::string>> hands) {
+    VectorCustom<int> indexes;
+    VectorCustom<VectorCustom<std::string>> fours;
+    for (int i = 0; i < hands.length(); ++i) {
+
+    }
+
+    if(indexes.empty()) indexes.push(-1);
+    return indexes;
+}
+
+VectorCustom<Play> Helper::getWinnersBreakTie(VectorCustom<Play> tieWinners) {
+    VectorCustom<VectorCustom<std::string>> hands;
+    for (int i = 0; i < tieWinners.length(); ++i) {
+        hands.push(tieWinners.get(i).getHand());
+    }
+    int playValue = tieWinners.get(0).getValue();
+    switch (playValue) {
+        case 10: case 9: {
+            return tieWinners;
+        }
+        case 8: {
+            VectorCustom<int> indexes = fourOfAKindBreakTie(hands);
+            if (indexes.get(0) == -1) {
+                return tieWinners;
+            }
+            VectorCustom<Play> winners;
+            for (int i = 0; i < indexes.length(); ++i) {
+                winners.push(tieWinners.get(indexes.get(i)));
+            }
+            return winners;
+        }
+        case 7: {
+            break;
+        }
+        case 6: {
+            break;
+        }
+        case 5: {
+            break;
+        }
+        case 4: {
+            break;
+        }
+        case 3: {
+            break;
+        }
+        case 2: {
+            break;
+        }
+        default: {
+            return {};
+        }
+    }
+}

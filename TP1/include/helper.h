@@ -1,6 +1,8 @@
 #ifndef HELPER_H
 #define HELPER_H
 
+#include "play.h"
+
 class Helper {
 public:
     Helper();
@@ -18,6 +20,9 @@ public:
     static bool isThreeOfAKind(VectorCustom<std::string> hand);
     static bool isTwoPairs(VectorCustom<std::string> hand);
     static bool isOnePair(VectorCustom<std::string> hand);
+
+    static VectorCustom<int> fourOfAKindBreakTie(VectorCustom<VectorCustom<std::string>> hands);
+    static VectorCustom<Play> getWinnersBreakTie(VectorCustom<Play> tieWinners);
 };
 
 #endif //HELPER_H
