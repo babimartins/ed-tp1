@@ -17,6 +17,7 @@ Result::Result(int numWinners, int amountWon, std::string wonPlay, VectorCustom<
 
 void Result::print() {
     std::cout << _numWinners << " " << _amountWon << " " << _wonPlay << std::endl;
+    _winners.sort();
     for (int i = 0; i < _winners.length(); i++) {
         std::cout << _winners.get(i) << std::endl;
     }

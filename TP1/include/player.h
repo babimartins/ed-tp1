@@ -19,6 +19,10 @@ public:
     void setTotalAmount(int totalAmount) { _totalAmount = totalAmount; }
 
     void print();
+
+    bool operator< (const Player &other) const {
+        return _totalAmount < other.getTotalAmount();
+    }
 };
 
 #endif //PLAYER_H

@@ -44,6 +44,11 @@ void Match::printResults() {
         Round round = _rounds.get(i);
         round.printResult();
     }
+    std::cout << "####" << std::endl;
+    _players.sort();
+    for (int i = _players.length() - 1; i >= 0; --i) {
+        _players.get(i).print();
+    }
 }
 
 void Match::print() {

@@ -16,6 +16,20 @@ Round::Round(int numPlays, int initBet, VectorCustom<Play> plays, Result result)
 }
 
 void Round::generateResult(VectorCustom<Player> players) {
+    for (int i = 0; i < players.length(); ++i) {
+        Play play;
+        Player player = players.get(i);
+        for (int j = 0; j < _plays.length(); ++j) {
+            if (_plays.get(j).getPlayerName() == player.getPlayerName()) {
+                play = _plays.get(j);
+                break;
+            }
+        }
+        int winnerAmount = player.getTotalAmount();
+        int bet = _initBet + play.getBet();
+        player.setTotalAmount(winnerAmount - bet);
+        players.push(player, i);
+    }
     VectorCustom<Play> updatedPlays;
     for (int i = 0; i < _plays.length(); ++i) {
         Play play = _plays.get(i);
@@ -25,11 +39,11 @@ void Round::generateResult(VectorCustom<Player> players) {
     }
     updatedPlays.sort();
     setPlays(updatedPlays);
-    Play winner = _plays.get(_plays.length() - 1);
+    Play lastWinner = _plays.get(_plays.length() - 1);
     VectorCustom<Play> tieWinners;
     for (int i = 0; i < _plays.length(); ++i) {
         Play play = _plays.get(i);
-        if (play.getValue() == winner.getValue()) {
+        if (play.getValue() == lastWinner.getValue()) {
             tieWinners.push(play);
         }
     }
@@ -42,7 +56,16 @@ void Round::generateResult(VectorCustom<Player> players) {
     for (int i = 0; i < _plays.length(); ++i) {
         totalAmount += _plays.get(i).getBet();
     }
-    Result result = Result(tieWinners.length(), totalAmount / tieWinners.length(), winner.getClassification(), winnersNames);
+    totalAmount /= tieWinners.length();
+    for (int i = 0; i < players.length(); ++i) {
+        if (winnersNames.contains(players.get(i).getPlayerName())) {
+            Player winner = players.get(i);
+            int winnerAmount = winner.getTotalAmount();
+            winner.setTotalAmount(winnerAmount + totalAmount);
+            players.push(winner, i);
+        }
+    }
+    Result result = Result(tieWinners.length(), totalAmount, lastWinner.getClassification(), winnersNames);
     setResult(result);
 }
 
