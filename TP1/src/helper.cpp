@@ -166,7 +166,7 @@ VectorCustom<int> Helper::fourOfAKindTieBreak(VectorCustom<VectorCustom<std::str
     }
 }
 
-VectorCustom<int> Helper::fullHouseTieBreak(VectorCustom<VectorCustom<std::string>> hands) {
+VectorCustom<int> Helper::fullHouseOrThreeOfAKidTieBreak(VectorCustom<VectorCustom<std::string>> hands) {
     VectorCustom<int> threes;
     for (int i = 0; i < hands.length(); ++i) {
         VectorCustom<int> hand = getCardNumbers(hands.get(i));
@@ -179,15 +179,32 @@ VectorCustom<int> Helper::fullHouseTieBreak(VectorCustom<VectorCustom<std::strin
         VectorCustom<int> extras;
         for (int i = 0; i < hands.length(); ++i) {
             VectorCustom<int> hand = getCardNumbers(hands.get(i));
+            int bigger;
             if (hand.get(0) != hand.get(1)) {
-                extras.push(hand.get(0));
+                bigger = hand.get(0) > hand.get(1) ? hand.get(0) : hand.get(1);
             } else {
-                extras.push(hand.get(4));
+                bigger = hand.get(3) > hand.get(4) ? hand.get(3) : hand.get(4);
             }
+            extras.push(bigger);
         }
         VectorCustom<int> indexesExtras = getBiggerIndexes(extras);
         return indexesExtras;
     }
+}
+
+VectorCustom<int> Helper::flushOrStraightTieBreak(VectorCustom<VectorCustom<std::string>> hands) {
+    VectorCustom<int> biggers;
+    for (int i = 0; i < hands.length(); ++i) {
+        VectorCustom<int> hand = getCardNumbers(hands.get(i));
+        hand.sort();
+        if (hand.get(0) == 1) {
+            biggers.push(hand.get(0));
+        } else {
+            biggers.push(hand.get(4));
+        }
+    }
+    VectorCustom<int> indexes = getBiggerIndexes(biggers);
+    return indexes;
 }
 
 VectorCustom<Play> Helper::getWinnersTieBreak(VectorCustom<Play> tieWinners) {
@@ -203,14 +220,11 @@ VectorCustom<Play> Helper::getWinnersTieBreak(VectorCustom<Play> tieWinners) {
         case 8:
             indexes = fourOfAKindTieBreak(hands);
             break;
-        case 7:
-            indexes = fullHouseTieBreak(hands);
+        case 7: case 4:
+            indexes = fullHouseOrThreeOfAKidTieBreak(hands);
             break;
-        case 6:
-            break;
-        case 5:
-            break;
-        case 4:
+        case 6: case 5:
+            indexes = flushOrStraightTieBreak(hands);
             break;
         case 3:
             break;
