@@ -48,7 +48,7 @@ void Round::generateResult(VectorCustom<Player> players) {
             tieWinners.push(play);
         }
     }
-    VectorCustom<Play> winners = Helper::getWinnersBreakTie(tieWinners);
+    VectorCustom<Play> winners = Helper::getWinnersTieBreak(tieWinners);
     VectorCustom<std::string> winnersNames;
     for (int i = 0; i < winners.length(); ++i) {
         Play play = winners.get(i);

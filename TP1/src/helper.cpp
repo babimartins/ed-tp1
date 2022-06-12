@@ -61,24 +61,17 @@ bool Helper::isStraightFlush(VectorCustom<std::string> hand) {
 }
 
 bool Helper::isFourOfAKind(VectorCustom<std::string> hand) {
-    bool isFour = true;
     VectorCustom<int> numbers = Helper::getCardNumbers(hand);
-    int firstNum = numbers.get(0);
-    for (int j = 1; j < numbers.length(); ++j) {
-        if (firstNum != numbers.get(j)) {
-            isFour = false;
+    if (numbers.get(0) != numbers.get(1)) {
+        for (int i = 1; i < numbers.length() - 1; ++i) {
+            if (numbers.get(i) != numbers.get(i + 1)) return false;
+        }
+    } else {
+        for (int i = 0; i < numbers.length() - 2; ++i) {
+            if (numbers.get(i) != numbers.get(i + 1)) return false;
         }
     }
-    if (isFour) {
-        return true;
-    }
-    int secNum = numbers.get(1);
-    for (int j = 2; j < numbers.length(); ++j) {
-        if (secNum != numbers.get(j)) {
-            isFour = false;
-        }
-    }
-    return isFour;
+    return true;
 }
 
 bool Helper::isFullHouse(VectorCustom<std::string> hand) {
@@ -130,18 +123,46 @@ bool Helper::isOnePair(VectorCustom<std::string> hand) {
     return false;
 }
 
-VectorCustom<int> Helper::fourOfAKindBreakTie(VectorCustom<VectorCustom<std::string>> hands) {
-    VectorCustom<int> indexes;
-    VectorCustom<VectorCustom<std::string>> fours;
+VectorCustom<int> Helper::fourOfAKindTieBreak(VectorCustom<VectorCustom<std::string>> hands) {
+    VectorCustom<int> fours;
     for (int i = 0; i < hands.length(); ++i) {
-
+        VectorCustom<std::string> hand = hands.get(i);
+        fours.push(stoi(hand.get(1)));
     }
-
-    if(indexes.empty()) indexes.push(-1);
-    return indexes;
+    int biggerFours = fours.get(0);
+    for (int i = 1; i < fours.length(); ++i) {
+        if (fours.get(i) > biggerFours) biggerFours = fours.get(i);
+    }
+    VectorCustom<int> indexesFours;
+    for (int i = 0; i < fours.length(); ++i) {
+        if (fours.get(i) == biggerFours) {
+            indexesFours.push(i);
+        }
+    }
+    VectorCustom<int> extras;
+    for (int i = 0; i < hands.length(); ++i) {
+        VectorCustom<int> hand = getCardNumbers(hands.get(i));
+        if (hand.get(0) != hand.get(1)) {
+            extras.push(hand.get(0));
+        } else {
+            extras.push(hand.get(4));
+        }
+    }
+    int biggerExtras = extras.get(0);
+    for (int i = 1; i < extras.length(); ++i) {
+        if (extras.get(i) > biggerExtras) biggerExtras = extras.get(i);
+    }
+    VectorCustom<int> indexesExtras;
+    for (int i = 0; i < extras.length(); ++i) {
+        if (extras.get(i) == biggerExtras) {
+            indexesExtras.push(i);
+        }
+    }
+    if (indexesExtras.empty()) indexesExtras.push(-1);
+    return indexesExtras;
 }
 
-VectorCustom<Play> Helper::getWinnersBreakTie(VectorCustom<Play> tieWinners) {
+VectorCustom<Play> Helper::getWinnersTieBreak(VectorCustom<Play> tieWinners) {
     VectorCustom<VectorCustom<std::string>> hands;
     for (int i = 0; i < tieWinners.length(); ++i) {
         hands.push(tieWinners.get(i).getHand());
@@ -152,7 +173,7 @@ VectorCustom<Play> Helper::getWinnersBreakTie(VectorCustom<Play> tieWinners) {
             return tieWinners;
         }
         case 8: {
-            VectorCustom<int> indexes = fourOfAKindBreakTie(hands);
+            VectorCustom<int> indexes = fourOfAKindTieBreak(hands);
             if (indexes.get(0) == -1) {
                 return tieWinners;
             }

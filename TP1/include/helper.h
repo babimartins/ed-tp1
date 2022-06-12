@@ -21,8 +21,8 @@ public:
     static bool isTwoPairs(VectorCustom<std::string> hand);
     static bool isOnePair(VectorCustom<std::string> hand);
 
-    static VectorCustom<int> fourOfAKindBreakTie(VectorCustom<VectorCustom<std::string>> hands);
-    static VectorCustom<Play> getWinnersBreakTie(VectorCustom<Play> tieWinners);
+    static VectorCustom<int> fourOfAKindTieBreak(VectorCustom<VectorCustom<std::string>> hands);
+    static VectorCustom<Play> getWinnersTieBreak(VectorCustom<Play> tieWinners);
 };
 
 #endif //HELPER_H
