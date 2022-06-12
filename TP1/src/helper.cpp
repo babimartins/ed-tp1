@@ -123,43 +123,71 @@ bool Helper::isOnePair(VectorCustom<std::string> hand) {
     return false;
 }
 
+VectorCustom<int> Helper::getBiggerIndexes(VectorCustom<int> cards) {
+    for (int i = 0; i < cards.length(); ++i) {
+        if (cards.get(i) == 1) {
+            cards.push(14, i);
+        }
+    }
+    int bigger = cards.get(0);
+    for (int i = 1; i < cards.length(); ++i) {
+        if (cards.get(i) > bigger) bigger = cards.get(i);
+    }
+    VectorCustom<int> indexes;
+    for (int i = 0; i < cards.length(); ++i) {
+        if (cards.get(i) == bigger) {
+            indexes.push(i);
+        }
+    }
+    return indexes;
+}
+
 VectorCustom<int> Helper::fourOfAKindTieBreak(VectorCustom<VectorCustom<std::string>> hands) {
     VectorCustom<int> fours;
     for (int i = 0; i < hands.length(); ++i) {
-        VectorCustom<std::string> hand = hands.get(i);
-        fours.push(stoi(hand.get(1)));
+        VectorCustom<int> hand = getCardNumbers(hands.get(i));
+        fours.push(hand.get(1));
     }
-    int biggerFours = fours.get(0);
-    for (int i = 1; i < fours.length(); ++i) {
-        if (fours.get(i) > biggerFours) biggerFours = fours.get(i);
-    }
-    VectorCustom<int> indexesFours;
-    for (int i = 0; i < fours.length(); ++i) {
-        if (fours.get(i) == biggerFours) {
-            indexesFours.push(i);
+    VectorCustom<int> indexesFours = getBiggerIndexes(fours);
+    if (indexesFours.length() == 1) {
+        return indexesFours;
+    } else {
+        VectorCustom<int> extras;
+        for (int i = 0; i < hands.length(); ++i) {
+            VectorCustom<int> hand = getCardNumbers(hands.get(i));
+            if (hand.get(0) != hand.get(1)) {
+                extras.push(hand.get(0));
+            } else {
+                extras.push(hand.get(4));
+            }
         }
+        VectorCustom<int> indexesExtras = getBiggerIndexes(extras);
+        return indexesExtras;
     }
-    VectorCustom<int> extras;
+}
+
+VectorCustom<int> Helper::fullHouseTieBreak(VectorCustom<VectorCustom<std::string>> hands) {
+    VectorCustom<int> threes;
     for (int i = 0; i < hands.length(); ++i) {
         VectorCustom<int> hand = getCardNumbers(hands.get(i));
-        if (hand.get(0) != hand.get(1)) {
-            extras.push(hand.get(0));
-        } else {
-            extras.push(hand.get(4));
+        threes.push(hand.get(1));
+    }
+    VectorCustom<int> indexesThrees = getBiggerIndexes(threes);
+    if (indexesThrees.length() == 1) {
+        return indexesThrees;
+    } else {
+        VectorCustom<int> extras;
+        for (int i = 0; i < hands.length(); ++i) {
+            VectorCustom<int> hand = getCardNumbers(hands.get(i));
+            if (hand.get(0) != hand.get(1)) {
+                extras.push(hand.get(0));
+            } else {
+                extras.push(hand.get(4));
+            }
         }
+        VectorCustom<int> indexesExtras = getBiggerIndexes(extras);
+        return indexesExtras;
     }
-    int biggerExtras = extras.get(0);
-    for (int i = 1; i < extras.length(); ++i) {
-        if (extras.get(i) > biggerExtras) biggerExtras = extras.get(i);
-    }
-    VectorCustom<int> indexesExtras;
-    for (int i = 0; i < extras.length(); ++i) {
-        if (extras.get(i) == biggerExtras) {
-            indexesExtras.push(i);
-        }
-    }
-    if (indexesExtras.empty()) indexesExtras.push(-1);
-    return indexesExtras;
 }
 
 VectorCustom<Play> Helper::getWinnersTieBreak(VectorCustom<Play> tieWinners) {
@@ -167,42 +195,36 @@ VectorCustom<Play> Helper::getWinnersTieBreak(VectorCustom<Play> tieWinners) {
     for (int i = 0; i < tieWinners.length(); ++i) {
         hands.push(tieWinners.get(i).getHand());
     }
+    VectorCustom<int> indexes;
     int playValue = tieWinners.get(0).getValue();
     switch (playValue) {
-        case 10: case 9: {
+        case 10: case 9:
             return tieWinners;
-        }
-        case 8: {
-            VectorCustom<int> indexes = fourOfAKindTieBreak(hands);
-            if (indexes.get(0) == -1) {
-                return tieWinners;
-            }
-            VectorCustom<Play> winners;
-            for (int i = 0; i < indexes.length(); ++i) {
-                winners.push(tieWinners.get(indexes.get(i)));
-            }
-            return winners;
-        }
-        case 7: {
+        case 8:
+            indexes = fourOfAKindTieBreak(hands);
             break;
-        }
-        case 6: {
+        case 7:
+            indexes = fullHouseTieBreak(hands);
             break;
-        }
-        case 5: {
+        case 6:
             break;
-        }
-        case 4: {
+        case 5:
             break;
-        }
-        case 3: {
+        case 4:
             break;
-        }
-        case 2: {
+        case 3:
             break;
-        }
-        default: {
-            return {};
-        }
+        case 2:
+            break;
+        default:
+            break;
     }
+    if (indexes.empty()) {
+        return tieWinners;
+    }
+    VectorCustom<Play> winners;
+    for (int i = 0; i < indexes.length(); ++i) {
+        winners.push(tieWinners.get(indexes.get(i)));
+    }
+    return winners;
 }
