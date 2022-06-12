@@ -24,7 +24,7 @@ public:
     static VectorCustom<int> getBiggerIndexes(VectorCustom<int> cards);
     static VectorCustom<int> fourOfAKindTieBreak(VectorCustom<VectorCustom<std::string>> hands);
     static VectorCustom<int> fullHouseOrThreeOfAKidTieBreak(VectorCustom<VectorCustom<std::string>> hands);
-    static VectorCustom<int> flushOrStraightTieBreak(VectorCustom<VectorCustom<std::string>> hands);
+    static VectorCustom<int> flushOrStraightOrHighCardTieBreak(VectorCustom<VectorCustom<std::string>> hands);
     static VectorCustom<Play> getWinnersTieBreak(VectorCustom<Play> tieWinners);
 };
 

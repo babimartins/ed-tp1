@@ -192,7 +192,7 @@ VectorCustom<int> Helper::fullHouseOrThreeOfAKidTieBreak(VectorCustom<VectorCust
     }
 }
 
-VectorCustom<int> Helper::flushOrStraightTieBreak(VectorCustom<VectorCustom<std::string>> hands) {
+VectorCustom<int> Helper::flushOrStraightOrHighCardTieBreak(VectorCustom<VectorCustom<std::string>> hands) {
     VectorCustom<int> biggers;
     for (int i = 0; i < hands.length(); ++i) {
         VectorCustom<int> hand = getCardNumbers(hands.get(i));
@@ -223,14 +223,12 @@ VectorCustom<Play> Helper::getWinnersTieBreak(VectorCustom<Play> tieWinners) {
         case 7: case 4:
             indexes = fullHouseOrThreeOfAKidTieBreak(hands);
             break;
-        case 6: case 5:
-            indexes = flushOrStraightTieBreak(hands);
-            break;
         case 3:
             break;
         case 2:
             break;
-        default:
+        case 6: case 5: default:
+            indexes = flushOrStraightOrHighCardTieBreak(hands);
             break;
     }
     if (indexes.empty()) {
