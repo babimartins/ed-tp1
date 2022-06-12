@@ -77,7 +77,7 @@ public:
         for (int i = 1; i < size; i++) {
             T el = arr[i];
             int j = i - 1;
-            while (el < arr[j] && j >= 0) {
+            while (j >= 0 && el < arr[j]) {
                 arr[j + 1] = arr[j];
                 --j;
             }
