@@ -207,6 +207,62 @@ VectorCustom<int> Helper::flushOrStraightOrHighCardTieBreak(VectorCustom<VectorC
     return indexes;
 }
 
+VectorCustom<int> Helper::twoPairsOrOnePairTieBreak(VectorCustom<VectorCustom<std::string>> hands) {
+    VectorCustom<VectorCustom<int>> handsNumbers;
+    for (int i = 0; i < hands.length(); ++i) {
+        VectorCustom<int> hand = getCardNumbers(hands.get(i));
+        hand.sort();
+        handsNumbers.push(hand);
+    }
+    VectorCustom<int> twos;
+    for (int i = 0; i < handsNumbers.length(); ++i) {
+        twos.push(handsNumbers.get(i).get(3));
+    }
+    VectorCustom<int> indexes = getBiggerIndexes(twos);
+    if (indexes.length() == 1) {
+        return indexes;
+    } else {
+        VectorCustom<int> extras;
+        for (int i = 0; i < indexes.length(); ++i) {
+            VectorCustom<int> hand = handsNumbers.get(indexes.get(i));
+            if (hand.get(0) == hand.get(1) || hand.get(1) == hand.get(2)) {
+                extras.push(hand.get(1));
+            } else if (hand.get(3) == hand.get(4)) {
+                extras.push(hand.get(2));
+            } else {
+                extras.push(hand.get(4));
+            }
+        }
+        indexes = getBiggerIndexes(extras);
+        if (indexes.length() == 1) {
+            return indexes;
+        }
+    }
+    VectorCustom<int> extras;
+    for (int i = 0; i < indexes.length(); ++i) {
+        VectorCustom<int> hand = handsNumbers.get(indexes.get(i));
+        for (int j = 0; j < hand.length(); ++j) {
+            if (hand.get(j) == 1) {
+                hand.push(14, j);
+            }
+        }
+        hand.sort();
+        int different = hand.get(0);
+        if (hand.get(0) == hand.get(1)) {
+            if (hand.get(3) == hand.get(4)) {
+                different = hand.get(2);
+            } else {
+                different = hand.get(4);
+            }
+        } else if (hand.get(1) == hand.get(2) && hand.get(3) != hand.get(4)) {
+            different = hand.get(4);
+        }
+        extras.push(different);
+    }
+    indexes = getBiggerIndexes(extras);
+    return indexes;
+}
+
 VectorCustom<Play> Helper::getWinnersTieBreak(VectorCustom<Play> tieWinners) {
     VectorCustom<VectorCustom<std::string>> hands;
     for (int i = 0; i < tieWinners.length(); ++i) {
@@ -223,13 +279,14 @@ VectorCustom<Play> Helper::getWinnersTieBreak(VectorCustom<Play> tieWinners) {
         case 7: case 4:
             indexes = fullHouseOrThreeOfAKidTieBreak(hands);
             break;
-        case 3:
-            break;
-        case 2:
-            break;
-        case 6: case 5: default:
+        case 6: case 5: case 1:
             indexes = flushOrStraightOrHighCardTieBreak(hands);
             break;
+        case 3: case 2:
+            indexes = twoPairsOrOnePairTieBreak(hands);
+            break;
+        default:
+            return tieWinners;
     }
     if (indexes.empty()) {
         return tieWinners;

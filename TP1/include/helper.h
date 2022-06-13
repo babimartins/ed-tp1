@@ -25,6 +25,7 @@ public:
     static VectorCustom<int> fourOfAKindTieBreak(VectorCustom<VectorCustom<std::string>> hands);
     static VectorCustom<int> fullHouseOrThreeOfAKidTieBreak(VectorCustom<VectorCustom<std::string>> hands);
     static VectorCustom<int> flushOrStraightOrHighCardTieBreak(VectorCustom<VectorCustom<std::string>> hands);
+    static VectorCustom<int> twoPairsOrOnePairTieBreak(VectorCustom<VectorCustom<std::string>> hands);
     static VectorCustom<Play> getWinnersTieBreak(VectorCustom<Play> tieWinners);
 };
 
