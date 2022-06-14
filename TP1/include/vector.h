@@ -20,7 +20,7 @@ public:
         arr = new T[1];
         arr[0] = data;
         size = 1;
-        max = 1;
+        max = 2;
     };
 
     void push(T data) {
@@ -40,10 +40,11 @@ public:
     };
 
     void push(T data, int index) {
-        if (index == max)
+        if (index == max) {
             push(data);
-        else
+        } else {
             arr[index] = data;
+        }
     }
 
     T get(int index) {
